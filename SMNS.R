@@ -49,9 +49,9 @@ ggplot(tax_occ, aes(x=where, fill=Phylum)) +
   theme(axis.title.x = element_blank(), 
         legend.title = element_blank(), 
         legend.text = element_markdown(), 
-        legend.key.size = unit(18, 'pt'), 
-        text = element_text(family = "Calibri")
+        legend.key.size = unit(18, 'pt')
         ) +
+  theme(axis.text.x = element_text(angle = 90)) #change label orientation, so it doesn't overlap
   labs(y='Number of OTUs')
 ggsave('plots/where_taxonomy.png', dpi=600)
 
@@ -107,8 +107,7 @@ ggplot(new_otus, aes(x=time_point)) +
   scale_color_manual(values = c(colm, cols)) +
   scale_x_continuous(breaks = seq(1, 14)) +
   labs(x='Sampling point', y='Number of new OTUs', color='Type of sample') +
-  theme_bw(base_size=18) +
-  theme( text = element_text(family = "Calibri"))
+  theme_bw(base_size=18)
 ggsave('plots/newOTUs.png', dpi=600)
 
 # Is the correlation linear? 
@@ -119,16 +118,16 @@ ggscatter(corr_new, x='new.x', y='new.y',
           cor.coef = TRUE, cor.method = 'pearson', 
           xlab='Acquisition of new OTUs in microbiota samples', ylab= 'Acquisition of new OTUs in sporobiota samples')
 
-# Is data normaly distributed? 
+# Is data normally distributed? 
 shapiro.test(corr_new$new.y)
 # Q-Q plot 
 ggqqplot(corr_new$new.x, ylab='Acquisition of new OTUs in microbiota samples')
 ggqqplot(corr_new$new.y, ylab='Acquisition of new OTUs in sporobiota samples')
 
-# Person's Corelation of aquisition of new OTUs in Microbiota and Sporobiota 
+# Person's Correlation of acquisition of new OTUs in Microbiota and Sporobiota 
 cor.test(corr_new$new.x, corr_new$time_point, method = 'pearson')
 cor.test(corr_new$new.y, corr_new$time_point, method = 'pearson')
-# There is significaly significant(p-value = 2e-16), strong positive correlation (0.86) between the acquisition of new OTUs between samples in microbiota and sporobiota. 
+# There is significantly significant(p-value = 2e-16), strong positive correlation (0.86) between the acquisition of new OTUs between samples in microbiota and sporobiota. 
 
 # Only for me, not for presentation
 # What is the taxonomic determination and relative abundance of the OTUs that are new in later time-points?
@@ -203,8 +202,8 @@ occ_abun <- data.frame(otu_occ=otu_occ, otu_rel=otu_rel) %>%           # combini
 plot1 = ggplot(data=occ_abun, aes(x=log10(otu_rel), y=otu_occ)) +
   geom_point(pch=21, fill=colm) +
   labs(x="log10(mean relative abundance)", y="Occupancy") +
-  theme_bw(base_size = 18) +
-  theme( text = element_text(family = "Calibri"))
+  theme_bw(base_size = 18)# +
+  #theme( text = element_text(family = "Calibri"))
 
 # For sporobiota
 otutab = otu_rare %>% filter(str_detect(Group, '^S')) %>%
@@ -221,8 +220,8 @@ occ_abun <- data.frame(otu_occ=otu_occ, otu_rel=otu_rel) %>%
 plot2 = ggplot(data=occ_abun, aes(x=log10(otu_rel), y=otu_occ)) +
   geom_point(pch=21, fill=cols) +
   labs(x="log10(mean relative abundance)", y="Occupancy") +
-  theme_bw(base_size = 18) +
-  theme( text = element_text(family = "Calibri"))
+  theme_bw(base_size = 18)# +
+  #theme( text = element_text(family = "Calibri"))
   #facet_wrap(~Phylum, ncol=3, nrow = 4)
 
 ggarrange(plot1 + rremove("ylab") + rremove("xlab"), 
@@ -275,7 +274,6 @@ ggplot(final_agg[final_agg$prevalence != 0,], aes(x = prevalence, y = count, col
   scale_x_continuous(breaks = seq(0,12, by=1)) +
   labs(x='Occupancy by person', y= 'Number of observed new OTUs', color='Type of sample') +
   theme_bw(base_size = 18) +
-  theme(text = element_text(family = "Calibri")) +
   coord_flip()
 
 ggsave('plots/occupancy_count.png', dpi=600)
